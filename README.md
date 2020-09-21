@@ -64,7 +64,7 @@ Or Maven:
 
 # Author
 
-[khanbeiki](www.khanbeiki.com)
+[mmoslem khanbeiki](http://khanbeiki.ir/)
 
 # Thanks
 
