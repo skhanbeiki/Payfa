@@ -28,10 +28,10 @@ You can download a jar from GitHub's [releases page.](https://github.com/skhanbe
 
 Or use Gradle:
 ```java
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+compileOptions {
+      sourceCompatibility JavaVersion.VERSION_1_8
+      targetCompatibility JavaVersion.VERSION_1_8
+}
 ```
 
 ```java
@@ -53,10 +53,25 @@ Or Maven:
 	    <version>1.0</version>
 	</dependency>
 ```
+# library in use
+
+```java
+    implementation 'org.jetbrains:annotations:16.0.1'
+    implementation 'androidx.browser:browser:1.2.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+```
+
 # Author
 
 [khanbeiki](www.khanbeiki.com)
 
 # Thanks
+
+[retrofit](https://square.github.io/retrofit/)
+
+# Disclaimer
+
+This is not an official Google product.
 
     
