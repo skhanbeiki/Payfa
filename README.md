@@ -37,10 +37,11 @@ compileOptions {
 
 ```java
 repositories {
-maven { url 'https://jitpack.io' }
+   maven { url 'https://jitpack.io' }
 }
+
 dependencies {
-implementation 'com.github.skhanbeiki:Payfa:1.0'
+   implementation 'com.github.skhanbeiki:Payfa:1.0'
 }
 ```
 Or Maven:
