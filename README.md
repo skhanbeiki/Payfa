@@ -13,17 +13,17 @@ It is better to use Google Chrome to publish in markets that do not accept the i
 If you want to use the internal browser, you can explain to your market support.
 
 
-### Attributes
+# Attributes
 + Fast
 + Easy
 + high security
 
-### Can be used in 
+# Can be used in 
 ```
 minSdkVersion 16
 ```
 
-### Download
+# Download
 You can download a jar from GitHub's [releases page.](https://github.com/skhanbeiki/Payfa/releases)
 
 Or use Gradle:
@@ -53,6 +53,9 @@ Or Maven:
 	    <version>1.0</version>
 	</dependency>
 ```
-      
-      
+#Author
+[khanbeiki](www.khanbeiki.com)
+
+#Thanks
+
     
