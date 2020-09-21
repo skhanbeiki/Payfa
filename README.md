@@ -17,6 +17,7 @@ If you want to use the internal browser, you can explain to your market support.
 + Fast
 + Easy
 + high security
++ android X
 
 # Can be used in 
 ```
@@ -64,11 +65,11 @@ Or Maven:
 
 # Author
 
-[mmoslem khanbeiki](http://khanbeiki.ir/)
+[Moslem Khanbeiki](http://khanbeiki.ir/)
 
 # Thanks
 
-[retrofit](https://square.github.io/retrofit/)
+[Retrofit](https://square.github.io/retrofit/)
 
 # Disclaimer
 
