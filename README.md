@@ -1,4 +1,5 @@
 # Payfa
+[![](https://jitpack.io/v/skhanbeiki/Payfa.svg)](https://jitpack.io/#skhanbeiki/Payfa)
 ##### An online payment SDK for android
 
 [Payfa website](https://payfa.com/)
