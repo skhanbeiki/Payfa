@@ -1,0 +1,3 @@
+include ':payfa'
+include ':app'
+rootProject.name = "Payfa"
