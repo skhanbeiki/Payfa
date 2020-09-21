@@ -5,7 +5,9 @@
 [Payfa website](https://payfa.com/)
 
 Payfa is a quick and easy library for projects that require a payment gateway.
+
  ![alt text](https://github.com/skhanbeiki/Payfa/blob/master/images/head.png)
+ 
 Pfa supports Google Chrome and the internal browser, you can change the color of the payment page to use the built-in browser.
 It is better to use Google Chrome to publish in markets that do not accept the internal browser.
 If you want to use the internal browser, you can explain to your market support.
