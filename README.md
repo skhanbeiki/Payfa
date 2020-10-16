@@ -128,7 +128,10 @@ To return from the Bank page to the desired activity
                     android:scheme="http" />
 </intent-filter>
 ```
-
+String File :
+```
+<string name="host1">payfa.com</string>
+```
 # library in use
 
 ```java
