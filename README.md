@@ -100,9 +100,25 @@ Status :
 
     }
 ```
+Or :
+```java
+new Payfa().payStatus(API, "payment_id", ActVerify.this);
+
+   @Override
+    public void onFailure(ErrorModel errorModel) {
+
+    }
+
+    @Override
+    public void onFinish(Status status) {
+
+    }
+```
+
 manifest :
+
 To return from the Bank page to the desired activity
-```xml
+```java
 <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
