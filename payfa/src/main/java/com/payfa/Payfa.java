@@ -81,7 +81,7 @@ public class Payfa {
             payfaVerify.onFailure(new ErrorModel(ErrorMessage.msg704[0], ErrorMessage.msg704[1]));
             return;
         }
-
+        Log.i("sriognwerhwrh", payment_id);
         VerifyType verifyType = new VerifyType();
         verifyType.api = api;
         verifyType.payment_id = Integer.parseInt(payment_id);
@@ -92,7 +92,7 @@ public class Payfa {
 
     }
 
-    public Payfa init( @NotNull String api,@NotNull Activity activity) {
+    public Payfa init(@NotNull String api, @NotNull Activity activity) {
         this.activity = activity;
         this.api = api;
         return this;
@@ -174,6 +174,7 @@ public class Payfa {
     }
 
     private void request(RequestType requestType) {
+        Log.i("TextProject", "requestType");
         Call<Status> call = new PayfaService().getApiInterface().request(requestType.api,
                 requestType.amount, requestType.invoice_id, requestType.callback, requestType.name,
                 requestType.details);
@@ -186,9 +187,9 @@ public class Payfa {
                     if (data != null) {
                         if (Integer.parseInt(data.status) > 0) {
                             payfaRequest.onFinish(data.status);
+                            PreferencesHelper.saveToPreferences(activity, preferenceName, data.status);
                             if (internalBrowser) {
                                 openPayfaWithCustomTab(data.status);
-                                PreferencesHelper.saveToPreferences(activity, preferenceName, data.status);
                             } else {
                                 openPayfaWithChrome(data.status);
                             }

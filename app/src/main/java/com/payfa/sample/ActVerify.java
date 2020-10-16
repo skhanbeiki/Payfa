@@ -3,6 +3,7 @@ package com.payfa.sample;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,8 +29,8 @@ public class ActVerify extends AppCompatActivity implements PayfaVerify {
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("TextProject", "onClick");
                 new Payfa().payStatus(API, getApplicationContext(), ActVerify.this);
-                new Payfa().payStatus(API, "payment_id", ActVerify.this);
             }
         });
 
@@ -37,11 +38,11 @@ public class ActVerify extends AppCompatActivity implements PayfaVerify {
 
     @Override
     public void onFailure(ErrorModel errorModel) {
-
+        Log.i("TextProject", errorModel.msg);
     }
 
     @Override
     public void onFinish(Status status) {
-
+        Log.i("TextProject", status.status);
     }
 }
