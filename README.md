@@ -41,7 +41,7 @@ repositories {
 }
 
 dependencies {
-   implementation 'com.github.skhanbeiki:Payfa:1.0'
+   implementation 'com.github.skhanbeiki:Payfa:1.1'
 }
 ```
 Or Maven:
