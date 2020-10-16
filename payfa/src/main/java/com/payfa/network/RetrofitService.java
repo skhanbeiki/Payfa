@@ -11,5 +11,14 @@ public interface RetrofitService {
 
     @FormUrlEncoded
     @POST("request/")
-    Call<Status> getData(@Field("api") String api, @Field("amount") int amount, @Field("invoice_id") int invoice_id, @Field("callback") String callback);
+    Call<Status> request(@Field("api") String api,
+                         @Field("amount") int amount,
+                         @Field("invoice_id") int invoice_id,
+                         @Field("callback") String callback,
+                         @Field("name") String name,
+                         @Field("details") String details);
+
+    @FormUrlEncoded
+    @POST("verify/")
+    Call<Status> verify(@Field("api") String api, @Field("payment_id") int payment_id);
 }

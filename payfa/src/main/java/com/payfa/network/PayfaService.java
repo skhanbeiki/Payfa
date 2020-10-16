@@ -19,7 +19,6 @@ public class PayfaService {
 
     private RetrofitService mService;
     private Retrofit retrofit;
-    private Context context;
 
     public Retrofit getRetrofitClient() {
         return retrofit;
@@ -38,8 +37,7 @@ public class PayfaService {
                 .build();
     }
 
-    public PayfaService(Context context) {
-        this.context = context;
+    public PayfaService() {
         retrofit = new Retrofit.Builder()
                 .baseUrl(ClientConfigs.baseUrl())
                 .client(provideOkHttpClient())

@@ -1,43 +1,47 @@
-package com.payfa.sdk;
+package com.payfa.sample;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.payfa.Listeners.PayfaInterface;
+import com.payfa.Listeners.PayfaRequest;
 import com.payfa.Payfa;
 import com.payfa.enums.Currency;
 import com.payfa.models.ErrorModel;
+import com.payfa.network.ClientConfigs;
 
-public class MainActivity extends AppCompatActivity implements PayfaInterface {
+import java.util.Random;
+
+public class ActRequest extends AppCompatActivity implements PayfaRequest {
 
     private TextView textView;
-    private Button button;
+    private Button btnRequest;
+    private static final String API = "f706b207cc5bd388ec604817b24a7ae7";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.act_request);
 
         textView = findViewById(R.id.textView);
-        button = findViewById(R.id.button);
+        btnRequest = findViewById(R.id.btnRequest);
 
-
-        button.setOnClickListener(new View.OnClickListener() {
+        btnRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Payfa().init(MainActivity.this, "2b12ab7c2edaf7b9ff376866d997db59")
-                        .amount(500000, Currency.rial)
-                        .invoice(2140000)
-                        .listener(MainActivity.this)
-                        .internalBrowser(true)
-                        .requestCode(56333)
+                new Payfa().init(API, ActRequest.this)
+                        .amount(1100, Currency.toman)
+                        .invoice(new Random().nextInt(1256325))
+                        .listener(ActRequest.this)
+                        .internalBrowser(false)
+                        .requestCode(1371)
                         .build();
             }
         });
@@ -64,7 +68,9 @@ public class MainActivity extends AppCompatActivity implements PayfaInterface {
     }
 
     @Override
-    public void onFinish() {
-        Log.i("TextProject", "onFinish");
+    public void onFinish(String paymentId) {
+        Log.i("TextProject", "onFinish = " + paymentId);
+        textView.setText(paymentId);
     }
+
 }

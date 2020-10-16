@@ -7,5 +7,4 @@ public class RequestType {
     public String details;
     public String callback;
     public String api;
-    public String packageName;
 }

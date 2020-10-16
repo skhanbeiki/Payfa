@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Payfa</string>
+    <string name="host1">payfa.com</string>
+
 </resources>

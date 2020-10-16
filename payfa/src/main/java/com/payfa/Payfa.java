@@ -1,6 +1,7 @@
 package com.payfa;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -8,17 +9,19 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
-import com.payfa.Listeners.PayfaInterface;
+import com.payfa.Listeners.PayfaRequest;
+import com.payfa.Listeners.PayfaVerify;
 import com.payfa.enums.Currency;
 import com.payfa.models.RequestType;
 import com.payfa.models.Status;
 import com.payfa.models.ErrorModel;
+import com.payfa.models.VerifyType;
 import com.payfa.network.ClientConfigs;
 import com.payfa.network.PayfaService;
 import com.payfa.sample.ErrorMessage;
+import com.payfa.sample.PreferencesHelper;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,25 +34,72 @@ import retrofit2.Response;
 public class Payfa {
 
     private Activity activity;
-    private Currency currency;
     private int amount;
     private int requestCode;
     private int invoice_id;
-    private PayfaInterface listen;
+    private PayfaRequest payfaRequest;
+    private PayfaVerify payfaVerify;
     private String api;
     private String name;
     private String details;
     private boolean internalBrowser;
     private String toolbarColor = "#43377e";
+    private final String preferenceName = "PayfaStatus";
 
-    public Payfa init(@NotNull Activity activity, @NotNull String api) {
+    public void payStatus(@NotNull String api, String payment_id, @NotNull PayfaVerify listen) {
+        this.payfaVerify = listen;
+        if (payfaVerify == null) {
+            return;
+        }
+        if (api == null || api.equals("")) {
+            payfaVerify.onFailure(new ErrorModel(ErrorMessage.msg703[0], ErrorMessage.msg703[1]));
+            return;
+        }
+        if (payment_id == null || payment_id.equals("")) {
+            payfaVerify.onFailure(new ErrorModel(ErrorMessage.msg704[0], ErrorMessage.msg704[1]));
+            return;
+        }
+
+        VerifyType verifyType = new VerifyType();
+        verifyType.api = api;
+        verifyType.payment_id = Integer.parseInt(payment_id);
+        verify(verifyType);
+    }
+
+    public void payStatus(@NotNull String api, Context context, @NotNull PayfaVerify listen) {
+        this.payfaVerify = listen;
+
+        if (payfaVerify == null) {
+            return;
+        }
+        if (api == null || api.equals("")) {
+            payfaVerify.onFailure(new ErrorModel(ErrorMessage.msg703[0], ErrorMessage.msg703[1]));
+            return;
+        }
+        String payment_id = PreferencesHelper.readFromPreferences(context, preferenceName, "NONE");
+
+        if (payment_id == null || payment_id.equals("NONE")) {
+            payfaVerify.onFailure(new ErrorModel(ErrorMessage.msg704[0], ErrorMessage.msg704[1]));
+            return;
+        }
+
+        VerifyType verifyType = new VerifyType();
+        verifyType.api = api;
+        verifyType.payment_id = Integer.parseInt(payment_id);
+        verify(verifyType);
+    }
+
+    public Payfa() {
+
+    }
+
+    public Payfa init( @NotNull String api,@NotNull Activity activity) {
         this.activity = activity;
         this.api = api;
         return this;
     }
 
     public Payfa amount(int amount, @NotNull Currency currency) {
-        this.currency = currency;
         switch (currency) {
             case rial:
                 this.amount = amount;
@@ -72,8 +122,8 @@ public class Payfa {
         return this;
     }
 
-    public Payfa listener(@NotNull PayfaInterface listen) {
-        this.listen = listen;
+    public Payfa listener(@NotNull PayfaRequest listen) {
+        this.payfaRequest = listen;
         return this;
     }
 
@@ -93,20 +143,20 @@ public class Payfa {
     }
 
     public void build() {
-        if (listen == null) {
+        if (payfaRequest == null) {
             return;
         }
-        listen.onLaunch();
+        payfaRequest.onLaunch();
         if (activity == null) {
-            listen.onFailure(new ErrorModel(ErrorMessage.msg701[0], ErrorMessage.msg701[1]));
+            payfaRequest.onFailure(new ErrorModel(ErrorMessage.msg701[0], ErrorMessage.msg701[1]));
             return;
         }
         if (api == null || api.equals("")) {
-            listen.onFailure(new ErrorModel(ErrorMessage.msg703[0], ErrorMessage.msg703[1]));
+            payfaRequest.onFailure(new ErrorModel(ErrorMessage.msg703[0], ErrorMessage.msg703[1]));
             return;
         }
         if (amount <= 10000) {
-            listen.onFailure(new ErrorModel(ErrorMessage.msg702[0], ErrorMessage.msg702[1]));
+            payfaRequest.onFailure(new ErrorModel(ErrorMessage.msg702[0], ErrorMessage.msg702[1]));
             return;
         }
 
@@ -119,14 +169,16 @@ public class Payfa {
         if (details != null) {
             requestType.details = details;
         }
-        requestType.callback = ClientConfigs.callback();
+        requestType.callback = activity.getPackageName();
         requestType.api = api;
-        requestType.packageName = activity.getPackageName();
-        getData(requestType);
+        request(requestType);
     }
 
-    private void getData(RequestType requestType) {
-        Call<Status> call = new PayfaService(activity).getApiInterface().getData(requestType.api, requestType.amount, requestType.invoice_id, requestType.callback);
+    private void request(RequestType requestType) {
+        Call<Status> call = new PayfaService().getApiInterface().request(requestType.api,
+                requestType.amount, requestType.invoice_id, requestType.callback, requestType.name,
+                requestType.details);
+        PreferencesHelper.clearToPreferences(activity, preferenceName);
         call.enqueue(new Callback<Status>() {
             @Override
             public void onResponse(@NonNull Call<Status> call, @NonNull Response<Status> response) {
@@ -134,26 +186,55 @@ public class Payfa {
                     Status data = response.body();
                     if (data != null) {
                         if (Integer.parseInt(data.status) > 0) {
-                            listen.onFinish();
+                            payfaRequest.onFinish(data.status);
                             if (internalBrowser) {
                                 openPayfaWithCustomTab(data.status);
+                                PreferencesHelper.readFromPreferences(activity, preferenceName, data.status);
                             } else {
                                 openPayfaWithChrome(data.status);
                             }
                         } else {
-                            listen.onFailure(new ErrorModel(data.status, data.msg));
+                            payfaRequest.onFailure(new ErrorModel(data.status, data.msg));
                         }
                     } else {
-                        listen.onFailure(new ErrorModel(ErrorMessage.msg700[0], ErrorMessage.msg700[1]));
+                        payfaRequest.onFailure(new ErrorModel(ErrorMessage.msg700[0], ErrorMessage.msg700[1]));
                     }
                 } else {
-                    listen.onFailure(new ErrorModel(ErrorMessage.msg700[0], ErrorMessage.msg700[1]));
+                    payfaRequest.onFailure(new ErrorModel(ErrorMessage.msg700[0], ErrorMessage.msg700[1]));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<Status> call, @NonNull Throwable t) {
-                listen.onFailure(new ErrorModel(ErrorMessage.msg700[0], ErrorMessage.msg700[1]));
+                payfaRequest.onFailure(new ErrorModel(ErrorMessage.msg700[0], ErrorMessage.msg700[1]));
+            }
+        });
+    }
+
+    private void verify(VerifyType verifyType) {
+        Call<Status> call = new PayfaService().getApiInterface().verify(verifyType.api, verifyType.payment_id);
+        call.enqueue(new Callback<Status>() {
+            @Override
+            public void onResponse(@NonNull Call<Status> call, @NonNull Response<Status> response) {
+                if (response.isSuccessful()) {
+                    Status data = response.body();
+                    if (data != null) {
+                        if (Integer.parseInt(data.status) > 0) {
+                            payfaVerify.onFinish(data);
+                        } else {
+                            payfaVerify.onFailure(new ErrorModel(data.status, data.msg));
+                        }
+                    } else {
+                        payfaVerify.onFailure(new ErrorModel(ErrorMessage.msg700[0], ErrorMessage.msg700[1]));
+                    }
+                } else {
+                    payfaVerify.onFailure(new ErrorModel(ErrorMessage.msg700[0], ErrorMessage.msg700[1]));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Status> call, @NonNull Throwable t) {
+                payfaVerify.onFailure(new ErrorModel(ErrorMessage.msg700[0], ErrorMessage.msg700[1]));
             }
         });
     }
