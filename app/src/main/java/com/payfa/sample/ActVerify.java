@@ -29,6 +29,7 @@ public class ActVerify extends AppCompatActivity implements PayfaVerify {
             @Override
             public void onClick(View v) {
                 new Payfa().payStatus(API, getApplicationContext(), ActVerify.this);
+                new Payfa().payStatus(API, "payment_id", ActVerify.this);
             }
         });
 

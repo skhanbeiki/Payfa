@@ -42,6 +42,7 @@ public class ActRequest extends AppCompatActivity implements PayfaRequest {
                         .listener(ActRequest.this)
                         .internalBrowser(false)
                         .requestCode(1371)
+                        .nameAndDetails("name", "details")
                         .build();
             }
         });

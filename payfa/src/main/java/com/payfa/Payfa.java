@@ -77,7 +77,6 @@ public class Payfa {
             return;
         }
         String payment_id = PreferencesHelper.readFromPreferences(context, preferenceName, "NONE");
-
         if (payment_id == null || payment_id.equals("NONE")) {
             payfaVerify.onFailure(new ErrorModel(ErrorMessage.msg704[0], ErrorMessage.msg704[1]));
             return;
@@ -189,7 +188,7 @@ public class Payfa {
                             payfaRequest.onFinish(data.status);
                             if (internalBrowser) {
                                 openPayfaWithCustomTab(data.status);
-                                PreferencesHelper.readFromPreferences(activity, preferenceName, data.status);
+                                PreferencesHelper.saveToPreferences(activity, preferenceName, data.status);
                             } else {
                                 openPayfaWithChrome(data.status);
                             }
