@@ -8,7 +8,7 @@ Payfa is a quick and easy library for projects that require a payment gateway.
 
  ![alt text](https://github.com/skhanbeiki/Payfa/blob/master/images/head.png)
  
-Pfa supports Google Chrome and the internal browser, you can change the color of the payment page to use the built-in browser.
+Payfa supports Google Chrome and the internal browser, you can change the color of the payment page to use the built-in browser.
 It is better to use Google Chrome to publish in markets that do not accept the internal browser.
 If you want to use the internal browser, you can explain to your market support.
 
@@ -16,8 +16,8 @@ If you want to use the internal browser, you can explain to your market support.
 # Attributes
 + Fast
 + Easy
-+ high security
-+ android X
++ High Security
++ Android X
 
 # Can be used in 
 ```
@@ -58,6 +58,61 @@ Or Maven:
 	    <version>1.0</version>
 	</dependency>
 ```
+# How to use
+
+Request :
+```
+new Payfa().init(API, ActRequest.this)
+                        .amount(1100, Currency.toman)
+                        .invoice(new Random().nextInt(1256325))
+                        .listener(ActRequest.this)
+                        .internalBrowser(false)
+                        .requestCode(1371)
+                        .nameAndDetails("name", "details")
+                        .build();
+			
+    @Override
+    public void onLaunch() {
+        Log.i("TextProject", "onLaunch");
+    }
+
+    @Override
+    public void onFailure(ErrorModel errorModel) {
+        Log.i("TextProject", errorModel.msg + "   " + errorModel.code);
+    }
+
+    @Override
+    public void onFinish(String paymentId) {
+        Log.i("TextProject", "onFinish = " + paymentId);
+    }
+```
+Status :
+```
+ new Payfa().payStatus(API, getApplicationContext(), ActVerify.this);
+ 
+   @Override
+    public void onFailure(ErrorModel errorModel) {
+
+    }
+
+    @Override
+    public void onFinish(Status status) {
+
+    }
+```
+manifest :
+To return from the Bank page to the desired activity
+```
+<intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="@string/host1"
+                    android:scheme="http" />
+</intent-filter>
+```
+
 # library in use
 
 ```java
