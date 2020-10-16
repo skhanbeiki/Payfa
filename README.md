@@ -45,7 +45,7 @@ dependencies {
 }
 ```
 Or Maven:
-```
+```java
 	<repositories>
 		<repository>
 		    <id>jitpack.io</id>
@@ -61,7 +61,7 @@ Or Maven:
 # How to use
 
 Request :
-```
+```java
 new Payfa().init(API, ActRequest.this)
                         .amount(1100, Currency.toman)
                         .invoice(new Random().nextInt(1256325))
@@ -87,7 +87,7 @@ new Payfa().init(API, ActRequest.this)
     }
 ```
 Status :
-```
+```java
  new Payfa().payStatus(API, getApplicationContext(), ActVerify.this);
  
    @Override
@@ -102,7 +102,7 @@ Status :
 ```
 manifest :
 To return from the Bank page to the desired activity
-```
+```xml
 <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
