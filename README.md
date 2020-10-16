@@ -21,7 +21,7 @@ If you want to use the internal browser, you can explain to your market support.
 
 # Can be used in 
 ```
-minSdkVersion 16
+minSdkVersion 14
 ```
 
 # Download
