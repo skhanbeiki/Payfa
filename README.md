@@ -62,11 +62,11 @@ Or Maven:
 
 Request :
 ```java
-new Payfa().init(API, ActRequest.this)
+new Payfa().init(API, Activity.this)
                         .amount(1100, Currency.toman)
                         .invoice(new Random().nextInt(1256325))
-                        .listener(ActRequest.this)
-                        .internalBrowser(false)
+                        .listener(Activity.this) // implements PayfaRequest
+                        .internalBrowser(false) //if true .toolbarColor("#00ffff")
                         .requestCode(1371)
                         .nameAndDetails("name", "details")
                         .build();
@@ -88,7 +88,7 @@ new Payfa().init(API, ActRequest.this)
 ```
 Status :
 ```java
- new Payfa().payStatus(API, getApplicationContext(), ActVerify.this);
+ new Payfa().payStatus(API, getApplicationContext(), Activity.this); // implements PayfaVerify
  
    @Override
     public void onFailure(ErrorModel errorModel) {
@@ -102,7 +102,7 @@ Status :
 ```
 Or :
 ```java
-new Payfa().payStatus(API, "payment_id", ActVerify.this);
+new Payfa().payStatus(API, "payment_id", Activity.this);  // implements PayfaVerify
 
    @Override
     public void onFailure(ErrorModel errorModel) {
